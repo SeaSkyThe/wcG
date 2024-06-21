@@ -27,7 +27,7 @@ func count_lines(file io.Reader) int {
 			return count
 
 		case err != nil:
-			fmt.Errorf("Error when counting lines: %q", err)
+			_ = fmt.Errorf("Error when counting lines: %q", err)
 			return 0
 		}
 	}
@@ -43,6 +43,16 @@ func count_words(file io.Reader) int {
 	return count
 }
 
+func count_characters(file io.Reader) int {
+    scanner := bufio.NewScanner(file)
+    scanner.Split(bufio.ScanRunes)
+    count := 0
+    for scanner.Scan(){
+        count = count + 1
+    }
+    return count
+}
+
 func ProcessFlags(flag string, file *os.File) int {
 	file.Seek(0, io.SeekStart)
 	count := 0
@@ -54,6 +64,8 @@ func ProcessFlags(flag string, file *os.File) int {
 		count = count_lines(file)
     case "-w":
         count = count_words(file)
+    case "-m":
+        count = count_characters(file)
 	}
 
 	return count
