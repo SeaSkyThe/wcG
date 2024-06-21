@@ -30,3 +30,7 @@ Usage example:
 ```bash
 wcg -c test.txt
 ```
+
+```bash
+cat test.txt | wcg -c
+```

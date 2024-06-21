@@ -19,7 +19,7 @@ func TestProcessing(t *testing.T) {
 
 	expected_count := 0
 	for _, flag := range flags {
-        count := ProcessFlags(flag, file)
+        count := ProcessFlag(flag, file)
 		if flag == "-c" {
 			expected_count = 342190
 			if count != expected_count {
