@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
 	"os"
-	"strings"
 )
 
 func count_bytes(file io.Reader) int {
@@ -33,19 +33,29 @@ func count_lines(file io.Reader) int {
 	}
 }
 
-func count_words(line string) int {
-	words_slice := strings.Split(line, " ")
-	return len(words_slice)
+func count_words(file io.Reader) int {
+    scanner := bufio.NewScanner(file)
+    scanner.Split(bufio.ScanWords)
+    count := 0
+    for scanner.Scan() {
+        count = count + 1
+    }
+	return count
 }
 
 func ProcessFlags(flag string, file *os.File) int {
-    file.Seek(0, io.SeekStart)
+	file.Seek(0, io.SeekStart)
 	count := 0
-	if flag == "-c" {
+
+	switch flag {
+	case "-c":
 		count = count_bytes(file)
-	} else if flag == "-l" {
+	case "-l":
 		count = count_lines(file)
+    case "-w":
+        count = count_words(file)
 	}
+
 	return count
 }
 
@@ -69,6 +79,7 @@ func main() {
 	}
 	filename := args[len(args)-1]
 	file, _ := ReadFile(filename)
+    defer file.Close()
 
 	count := ProcessFlags(args[1], file)
 	output := fmt.Sprintf("%d %s", count, filename)
