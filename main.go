@@ -53,7 +53,7 @@ func count_characters(file io.Reader) int {
     return count
 }
 
-func ProcessFlags(flag string, file *os.File) int {
+func ProcessFlag(flag string, file *os.File) int {
 	file.Seek(0, io.SeekStart)
 	count := 0
 
@@ -93,8 +93,17 @@ func main() {
 	file, _ := ReadFile(filename)
     defer file.Close()
 
-	count := ProcessFlags(args[1], file)
-	output := fmt.Sprintf("%d %s", count, filename)
+    flags := args[1:len(args)-1]
+
+    if len(flags) == 0 {
+        flags = []string{"-l", "-w", "-c"}
+    }
+
+    output := " "
+    for _, flag := range flags {
+        output = output + fmt.Sprintf(" %d", ProcessFlag(flag, file))
+    }
+    output += fmt.Sprintf(" %s", filename)
 
 	println(output)
 }
