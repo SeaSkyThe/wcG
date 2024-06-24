@@ -8,7 +8,7 @@ If you want to know more about it, just read the manual by running the following
 ```bash
 man wc
 ```
-```
+
 # How to use
 
 Our version can be compiled with
